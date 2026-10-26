@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f9fc">
+<title>日常清單 | 待辦事項管理器</title>
+<style>
+:root{--bg:#f6f8fc;--panel:#fff;--ink:#202938;--muted:#758196;--line:#e7ebf2;--blue:#4778ee;--blue2:#eaf0ff;--green:#16856b;--red:#d94c5b;--shadow:0 14px 38px rgba(35,54,88,.07)}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#f7f9ff,#f5faf9);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;color:var(--ink);min-height:100vh}
+button,input,select{font:inherit}button{cursor:pointer}
+.shell{max-width:1080px;margin:auto;padding:38px 22px 54px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:30px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:15px;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:24px;box-shadow:0 7px 18px #4778ee35}
+.brand h1{font-size:21px;margin:0;letter-spacing:.2px}.brand p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.date-pill{border:1px solid var(--line);background:#fff;padding:10px 14px;border-radius:999px;color:#536075;font-size:13px}
+.hero{margin-bottom:25px}.eyebrow{color:var(--blue);font-size:12px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase}.hero h2{font-size:clamp(27px,4vw,38px);margin:9px 0 7px;letter-spacing:-1px}.hero p{color:var(--muted);margin:0;font-size:15px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:23px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow)}.stat-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}.stat-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:var(--blue2);color:var(--blue);font-size:16px}.stat strong{display:block;font-size:29px;margin-top:9px;letter-spacing:-1px}.stat small{font-size:12px;color:var(--muted);font-weight:500}
+.layout{display:grid;grid-template-columns: minmax(0,1.6fr) minmax(270px,.85fr);gap:20px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:21px 23px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}.panel-head h3{font-size:17px;margin:0}.panel-head p{font-size:12px;color:var(--muted);margin:5px 0 0}.count{background:#f0f3f9;border-radius:999px;padding:5px 9px;font-size:12px;color:#66748a}
+.add-form{padding:0 23px 18px;display:grid;grid-template-columns:1fr auto;gap:9px}.field{width:100%;border:1px solid #dfe5ef;background:#fbfcff;border-radius:12px;padding:12px 13px;outline:none;color:var(--ink);transition:.2s}.field:focus{border-color:#8ba9ff;box-shadow:0 0 0 3px #4778ee15}.add-main{display:flex;gap:8px;grid-column:1/-1}.add-main input{flex:1;min-width:0}.primary{border:0;background:var(--blue);color:#fff;border-radius:12px;padding:0 17px;font-weight:700;box-shadow:0 5px 13px #4778ee30}.primary:hover{background:#3568df}.form-extra{display:grid;grid-template-columns:1fr 1fr;gap:9px;grid-column:1/-1}.filters{padding:0 23px 15px;display:flex;gap:7px;flex-wrap:wrap}.filter{border:1px solid transparent;background:transparent;color:#7a8598;border-radius:999px;padding:7px 12px;font-size:12px}.filter.active{background:var(--blue2);color:var(--blue);font-weight:700}
+.task-list{padding:0 14px 14px}.task{display:flex;align-items:flex-start;gap:12px;padding:15px 10px;border-top:1px solid #f0f2f7;transition:background .2s}.task:hover{background:#fbfcff}.check{appearance:none;flex:0 0 20px;width:20px;height:20px;border:1.7px solid #cbd3e0;border-radius:7px;margin:1px 0 0;display:grid;place-items:center;cursor:pointer}.check:checked{background:var(--green);border-color:var(--green)}.check:checked:after{content:"✓";font-size:13px;color:white;font-weight:800}.task-body{flex:1;min-width:0}.task-title{font-size:14px;line-height:1.5;overflow-wrap:anywhere}.task.done .task-title{text-decoration:line-through;color:#9aa4b3}.task-meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:7px;font-size:11px;color:var(--muted)}.tag{padding:4px 7px;border-radius:6px;background:#f0f3f8}.tag.high{background:#fff0f0;color:#d84e5c}.tag.medium{background:#fff5e5;color:#a86b10}.tag.low{background:#eaf8f3;color:#16856b}.due.overdue{color:var(--red);font-weight:700}.task-actions{display:flex;gap:4px}.icon-btn{width:30px;height:30px;border:0;background:transparent;color:#98a2b3;border-radius:8px;font-size:15px}.icon-btn:hover{background:#f0f3f9;color:#3e4a5d}.empty{text-align:center;padding:38px 20px 42px;color:var(--muted)}.empty .empty-icon{font-size:30px;margin-bottom:9px}.empty strong{display:block;color:#4b586c;font-size:14px;margin-bottom:5px}.empty span{font-size:12px}
+.side{display:grid;gap:18px}.progress-panel{padding:21px 22px}.progress-panel h3{font-size:16px;margin:0 0 5px}.subtle{color:var(--muted);font-size:12px}.progress-row{display:flex;justify-content:space-between;align-items:center;margin-top:21px;font-size:13px}.progress-track{height:9px;border-radius:99px;background:#edf0f6;overflow:hidden;margin-top:10px}.progress-fill{height:100%;background:linear-gradient(90deg,#4778ee,#65b5df);border-radius:99px;transition:width .35s}.tip{padding:19px 20px;background:#eef4ff;border:1px solid #dfe9ff;border-radius:18px}.tip-title{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;color:#365bb0}.tip p{font-size:12px;line-height:1.7;color:#65799f;margin:10px 0 0}.clear-btn{width:100%;border:1px solid var(--line);background:#fff;color:#697589;padding:11px;border-radius:12px;font-size:12px}.clear-btn:hover{border-color:#f2b9bf;color:var(--red)}.footer{text-align:center;color:#a0a9b7;font-size:11px;margin-top:26px}
+.toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;background:#202938;color:#fff;border-radius:12px;padding:11px 16px;font-size:13px;box-shadow:var(--shadow);transition:.25s;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:760px){.shell{padding:23px 14px 35px}.date-pill{display:none}.stats{gap:9px}.stat{padding:14px 12px;border-radius:15px}.stat strong{font-size:24px}.stat-top{font-size:11px}.stat-icon{width:29px;height:29px}.layout{grid-template-columns:1fr}.side{grid-row:1}.progress-panel{padding:17px}.panel-head{padding:18px 17px 14px}.add-form{padding:0 17px 15px}.filters{padding:0 17px 13px}.task-list{padding:0 10px 10px}}
+@media(max-width:400px){.stats{grid-template-columns:1fr}.stat{display:flex;align-items:center;justify-content:space-between}.stat strong{margin:0}.form-extra{grid-template-columns:1fr}.hero h2{font-size:27px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand"><div class="logo">✓</div><div><h1>日常清單</h1><p>把想做的事，一件件完成。</p></div></div>
+    <div class="date-pill" id="todayLabel">今天，安排得剛剛好</div>
+  </header>
+  <section class="hero"><div class="eyebrow">YOUR DAILY SPACE</div><h2>早安，今天也一步一步來。</h2><p>整理思緒，專注當下。每完成一件事，都是小小的進步。</p></section>
+  <section class="stats">
+    <div class="stat"><div><div class="stat-top">全部任務</div><strong id="totalStat">0 <small>項</small></strong></div><div class="stat-icon">▤</div></div>
+    <div class="stat"><div><div class="stat-top">尚未完成</div><strong id="activeStat">0 <small>項</small></strong></div><div class="stat-icon">◷</div></div>
+    <div class="stat"><div><div class="stat-top">今日完成</div><strong id="doneStat">0 <small>項</small></strong></div><div class="stat-icon">✓</div></div>
+  </section>
+  <main class="layout">
+    <section class="panel">
+      <div class="panel-head"><div><h3>我的任務</h3><p>新增一件事，開始今天的節奏。</p></div><span class="count" id="visibleCount">0 項</span></div>
+      <form class="add-form" id="taskForm">
+        <div class="add-main"><input class="field" id="taskInput" maxlength="140" placeholder="例如：完成今天的作業…" aria-label="任務名稱" required><button class="primary" type="submit">＋ 新增</button></div>
+        <div class="form-extra">
+          <select class="field" id="priorityInput" aria-label="任務優先級"><option value="medium">中優先級</option><option value="high">高優先級</option><option value="low">低優先級</option></select>
+          <input class="field" type="date" id="dueInput" aria-label="截止日期">
+        </div>
+      </form>
+      <nav class="filters" aria-label="任務篩選">
+        <button class="filter active" data-filter="all">全部</button><button class="filter" data-filter="active">未完成</button><button class="filter" data-filter="done">已完成</button>
+      </nav>
+      <div class="task-list" id="taskList"></div>
+    </section>
+    <aside class="side">
+      <section class="panel progress-panel"><h3>今日進度</h3><div class="subtle">每一步都算數，繼續保持。</div><div class="progress-row"><span>完成比例</span><strong id="progressText">0%</strong></div><div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div><div class="progress-row"><span>待完成任務</span><strong id="remainingText">0 項</strong></div></section>
+      <section class="tip"><div class="tip-title">✦ 一點小提醒</div><p>先挑一件最重要的事開始。把大任務拆成小步驟，完成的感覺會讓你更有動力。</p></section>
+      <button class="clear-btn" id="clearDone">清除所有已完成任務</button>
+    </aside>
+  </main>
+  <div class="footer">日常清單 · 你的任務儲存在目前的瀏覽器中</div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const STORAGE_KEY='daily-list-v1';
+let tasks=[];
+let currentFilter='all';
+const $=id=>document.getElementById(id);
+const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const safeText=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function load(){try{const v=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');tasks=Array.isArray(v)?v:[]}catch{tasks=[]}}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(tasks))}
+function notify(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(notify.timer);notify.timer=setTimeout(()=>el.classList.remove('show'),2100)}
+function formatDate(s){if(!s)return '';const [y,m,d]=s.split('-');return `${y}/${m}/${d}`}
+function priorityLabel(p){return ({high:'高優先級',medium:'中優先級',low:'低優先級'})[p]||'中優先級'}
+function render(){
+ const active=tasks.filter(t=>!t.done).length, done=tasks.filter(t=>t.done).length, total=tasks.length;
+ $('totalStat').innerHTML=`${total} <small>項</small>`;$('activeStat').innerHTML=`${active} <small>項</small>`;$('doneStat').innerHTML=`${done} <small>項</small>`;
+ const pct=total?Math.round(done/total*100):0;$('progressText').textContent=pct+'%';$('progressFill').style.width=pct+'%';$('remainingText').textContent=active+' 項';
+ const visible=tasks.filter(t=>currentFilter==='all'||(currentFilter==='active'&&!t.done)||(currentFilter==='done'&&t.done));
+ $('visibleCount').textContent=visible.length+' 項';
+ $('taskList').innerHTML=visible.length?visible.map(t=>{
+  const overdue=t.due&&t.due<today()&&!t.done;
+  return `<article class="task ${t.done?'done':''}"><input class="check" type="checkbox" aria-label="完成任務" data-action="toggle" data-id="${t.id}" ${t.done?'checked':''}><div class="task-body"><div class="task-title">${safeText(t.title)}</div><div class="task-meta"><span class="tag ${t.priority}">${priorityLabel(t.priority)}</span>${t.due?`<span class="due ${overdue?'overdue':''}">${overdue?'已逾期 · ':'截止 '}${formatDate(t.due)}</span>`:''}</div></div><div class="task-actions"><button class="icon-btn" title="編輯任務" aria-label="編輯任務" data-action="edit" data-id="${t.id}">✎</button><button class="icon-btn" title="刪除任務" aria-label="刪除任務" data-action="delete" data-id="${t.id}">×</button></div></article>`
+ }).join(''):`<div class="empty"><div class="empty-icon">${currentFilter==='done'?'🌱':'✦'}</div><strong>${currentFilter==='done'?'還沒有完成的任務':'這裡還很清爽'}</strong><span>${currentFilter==='active'?'目前沒有待辦事項，享受一下空檔吧。':'新增一項任務，讓今天開始有個方向。'}</span></div>`;
+ document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b.dataset.filter===currentFilter));
+}
+$('taskForm').addEventListener('submit',e=>{e.preventDefault();const title=$('taskInput').value.trim();if(!title){notify('先輸入任務名稱喔');return}tasks.unshift({id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),title,priority:$('priorityInput').value,due:$('dueInput').value,done:false,createdAt:new Date().toISOString()});save();render();$('taskInput').value='';$('dueInput').value='';$('priorityInput').value='medium';$('taskInput').focus();notify('任務已新增！')});
+document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{currentFilter=b.dataset.filter;render()}));
+$('taskList').addEventListener('click',e=>{const el=e.target.closest('[data-action]');if(!el)return;const id=el.dataset.id;const task=tasks.find(t=>t.id===id);if(!task)return;
+ if(el.dataset.action==='toggle'){task.done=el.checked;if(task.done)task.completedAt=new Date().toISOString();else delete task.completedAt;save();render();notify(task.done?'做得好！任務完成。':'已恢復為未完成');}
+ if(el.dataset.action==='delete'){tasks=tasks.filter(t=>t.id!==id);save();render();notify('任務已刪除');}
+ if(el.dataset.action==='edit'){const title=prompt('編輯任務名稱：',task.title);if(title===null)return;if(!title.trim()){notify('任務名稱不能空白');return}task.title=title.trim().slice(0,140);save();render();notify('任務已更新');}
+});
+$('clearDone').addEventListener('click',()=>{const n=tasks.filter(t=>t.done).length;if(!n){notify('目前沒有已完成的任務');return}if(confirm(`確定要清除 ${n} 項已完成任務嗎？`)){tasks=tasks.filter(t=>!t.done);save();render();notify('已清除完成任務')}});
+$('todayLabel').textContent=new Intl.DateTimeFormat('zh-TW',{year:'numeric',month:'long',day:'numeric',weekday:'long'}).format(new Date());
+load();render();
+</script>
+</body>
+</html>
